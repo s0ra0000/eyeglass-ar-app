@@ -1,39 +1,44 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// app/_layout.tsx
+import React, { useContext, useEffect } from "react";
+import { Stack, usePathname, useRouter } from "expo-router";
+import { AuthProvider, AuthContext } from "../contexts/AuthContext";
+import { ActivityIndicator, View } from "react-native";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  return (
+    <AuthProvider>
+      <MainLayout />
+    </AuthProvider>
+  );
+}
 
+const MainLayout = () => {
+  const { isAuthenticated, isLoading } = useContext(AuthContext);
+  const router = useRouter();
+  const pathname = usePathname(); // Get the current pathname
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (!isLoading) {
+      console.log(isLoading);
+      if (!isAuthenticated && pathname.startsWith("/")) {
+        console.log(isAuthenticated);
+        router.replace("/auth/login");
+      }
     }
-  }, [loaded]);
+  }, [isAuthenticated, isLoading]);
 
-  if (!loaded) {
-    return null;
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
   );
-}
+};

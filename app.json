@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "eyeglass-ar-app",
-    "slug": "eyeglass-ar-app",
+    "slug": "eyeglass-ar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.s0ra_0000.eyeglassar",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
@@ -32,10 +34,26 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "13fdc7a8-9b13-4204-9a71-750a07b0ff45"
+      }
+    },
+    "owner": "s0ra_0000"
   }
 }
